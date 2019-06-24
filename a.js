@@ -1,10 +1,9 @@
 const Koa = require('koa');
-const mysql = require('./mysql/sql.js')
-// 注意require('koa-router')返回的是函数:
+const mysql = require('./mysql/sql.js');
+const f = require('./fs.js');
 const router = require('koa-router')();
-// 创建一个Koa对象表示web app本身:
-const app = new Koa();
 var bodyParser = require('koa-bodyparser');
+const app = new Koa();
 app.use(bodyParser());
 // 对于任何请求，app将调用该异步函数处理请求：
 app.use(async (ctx, next) => {
@@ -39,7 +38,7 @@ router.post('/select', async (ctx, next) => {
 			}
 		};
 });
-router.post('/a', async (ctx, next) => {
+router.post('/add', async (ctx, next) => {	
     var data = ctx.request.body;
 		var arr = [];
 		arr.push(data.type);
@@ -54,6 +53,17 @@ router.post('/a', async (ctx, next) => {
 			}
 		};
 });
+router.post('/delete', async (ctx, next) => {
+		var body = ctx.request.body;
+		let data = await mysql.query('DELETE * from user WHERE id=?',[body.id])
+    ctx.response.body = {
+			code:200,
+			data:{
+				data
+			}
+		};
+});
+f.a('6666')
 app.use(router.routes());
 // 在端口3000监听:
 app.listen(3000);
