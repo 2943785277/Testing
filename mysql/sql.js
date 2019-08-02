@@ -10,13 +10,23 @@ var pool  = mysql.createPool({
 class Mysql {
     constructor (p) {
     }
-    query (sql,data) {
+		/*
+			sql 语句            
+			数据             
+			类型 0(空)  返回数据不做处理    1默认第一条数据
+		*/
+    query (sql,data,i) {
       return new Promise((resolve, reject) => {
         pool.query(sql,data,function (error, results, fields) {
             if (error) {
                 console.log(error)
             };
-            resolve(results)
+						if(i == 1){
+							resolve(results[0])
+						}else{
+							resolve(results)
+						}
+            
         });
       })
     }
